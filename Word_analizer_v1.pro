@@ -5,7 +5,9 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp \
-    word.cpp
+    word.cpp \
+    wordstatistics.cpp
 
 HEADERS += \
-    word.h
+    word.h \
+    wordstatistics.h

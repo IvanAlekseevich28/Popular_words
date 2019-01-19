@@ -1,19 +1,28 @@
 #include <iostream>
-#include "word.h"
+#include "wordstatistics.h"
 #include <string>
 
 using namespace std;
 
 int main()
 {
-    string wd = "Popular";
+    string wd = "Pop";
     string wd1 = "highway";
+    string wd2 = "aplication";
+    string wd3 = "Ivan";
 
-    word A(wd);
+//    {
+//        word A(wd);
+//        word B9(wd1,2);
+//        A.printWord();
+//        B.printWord();
+//    }
 
-    A.printWord();
-    word B(wd1,2);
-    B.printWord();
-    cout << "Hello World!" << endl;
+    cout << "\n\n\n";
+    wordStatistics C(wd);
+    wordStatistics D(wd3,99998);
+    C.printWord();
+    D.printWord();
+    //cout << "Hello World!" << endl;
     return 0;
 }
