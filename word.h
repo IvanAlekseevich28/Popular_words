@@ -14,14 +14,15 @@ class word
 {
 private:
     string wd;
-    string Wd;
-    string WD;
+    //string Wd;
+    //string WD;
     unsigned applying;
     bool isName;
     static unsigned MAX_WIDTH;
 protected:
     char lowerHigherConverter(char);
     char higherLowerConverter(char);
+    string make_Word();
     const static char arrHIGH[27];
     const static char arrLOW[27];
 public:

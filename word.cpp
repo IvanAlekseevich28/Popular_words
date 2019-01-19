@@ -12,16 +12,16 @@ word::word(string &wd0, unsigned applying)
     for (unsigned i = 0; i < wd0.size(); i++)
         wd[i] = higherLowerConverter(wd0[i]);
 
-    this->Wd = wd0;
-    Wd[0] = lowerHigherConverter(Wd[0]);
-    for (unsigned i = 1; i < wd0.size(); i++)
-        Wd[i] = higherLowerConverter(wd[i]);
+//    this->Wd = wd0;
+//    Wd[0] = lowerHigherConverter(Wd[0]);
+//    for (unsigned i = 1; i < wd0.size(); i++)
+//        Wd[i] = higherLowerConverter(wd[i]);
 
-    this->WD = wd0;
-    for (unsigned i = 0; i < wd0.size(); i++)
-        this->WD[i] = lowerHigherConverter(wd0[i]);
+//    this->WD = wd0;
+//    for (unsigned i = 0; i < wd0.size(); i++)
+//        this->WD[i] = lowerHigherConverter(wd0[i]);
 
-    isName = true;
+    isName = !islower(wd0[0]);
     this->applying = applying;
     this->applying++;
 
@@ -46,14 +46,14 @@ char word::lowerHigherConverter(char sym)
 
 void word::printFullWord()
 {
-    cout << wd << " - " << Wd << " - " << WD << "\t" << "applying: " << applying << endl;
+    cout << wd/* << " - " << Wd << " - " << WD*/ << "\t" << "applying: " << applying << endl;
 }
 
 bool word::addApplying(string wd0)
 {
     if (*this == wd0)
     {
-        if (islower(wd[0])) isName = 0;
+        if (islower(wd[0])) isName = false;
         ++applying;
         return true;
     } else return false;
@@ -61,9 +61,16 @@ bool word::addApplying(string wd0)
 
 void word::printWord()
 {
-    if (isName) cout  << setiosflags(ios::orientation) << setw(static_cast<int>(MAX_WIDTH)) << Wd;
+    if (isName) cout  << setiosflags(ios::orientation) << setw(static_cast<int>(MAX_WIDTH)) << make_Word();
     else cout << setiosflags(ios::orientation) << setw(static_cast<int>(MAX_WIDTH)) << wd;
     cout << " - " << applying << endl;
+}
+
+string word::make_Word()
+{
+  string Wd = this->wd;
+    Wd[0] = lowerHigherConverter(Wd[0]);
+    return Wd;
 }
 
 bool word::operator<(word &other)
