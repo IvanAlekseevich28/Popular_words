@@ -1,28 +1,10 @@
 #include <iostream>
-#include "wordstatistics.h"
-#include <string>
-
+#include "analizer_words_in_text.h"
 using namespace std;
 
 int main()
 {
-    string wd = "Pop";
-    string wd1 = "highway";
-    string wd2 = "aplication";
-    string wd3 = "Ivan";
 
-//    {
-//        word A(wd);
-//        word B9(wd1,2);
-//        A.printWord();
-//        B.printWord();
-//    }
-
-    cout << "\n\n\n";
-    wordStatistics C(wd);
-    wordStatistics D(wd3,99998);
-    C.printWord();
-    D.printWord();
-    //cout << "Hello World!" << endl;
+    analizer_words_in_text A("C:\\Users\\Ivan\\Desktop\\test_text.txt");
     return 0;
 }
