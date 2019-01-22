@@ -42,6 +42,7 @@ class analizer_words_in_text
     void make_collection();
     void addWord(string);
     void printWord(const pair<string, info> &);
+    void printTextInfo();
 
     string small_word_maker(string&);
 

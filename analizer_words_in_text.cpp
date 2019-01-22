@@ -40,7 +40,7 @@ analizer_words_in_text::analizer_words_in_text(string input, mod M)
     make_collection();
     for (auto it : list_of_words)
         printWord(it);
-    cout << count_all_words << endl;
+    printTextInfo();
 }
 
 bool analizer_words_in_text::is_capital_letter(char s)
@@ -88,13 +88,13 @@ void analizer_words_in_text::prepare_the_text(string path, mod M)
                 buffer += s;
             else if ((s == '-') and is_letter(last_symbol))
                 buffer += '-';
-            else if ((s == ' ' or s == '\r' or s == '\t')
-                     and (last_symbol != ' '))
-                buffer += ' ';
+            else if ( (last_symbol != ' '))
+                buffer += " ";
             last_symbol = s;
         }
         fin.close();
-        cout << buffer << endl;
+       // buffer += " ";
+        cout << buffer << "." << endl;
     }
    else
    {
@@ -132,7 +132,7 @@ void analizer_words_in_text::make_collection()
             //cout << temp << endl;
             auto it = list_of_words.find(temp4search);
             if (it == list_of_words.end())              //If the search pointer points to the end of the tree,
-                addWord(temp);                          //add the word to the collection.
+            {if (is_word(temp)) addWord(temp); }                         //add the word to the collection.
             else
             {
                 it->second.applying++;
@@ -174,6 +174,13 @@ void analizer_words_in_text::printWord(const pair<string, info> &word)
              << word.first << " - " << word.second.applying;
     cout << endl;
 }
+
+void analizer_words_in_text::printTextInfo()
+{
+    cout << "Number of words: " << count_all_words << endl;
+    cout << "Number of diferent words: " << list_of_words.size() <<endl;
+}
+
 
 string analizer_words_in_text::small_word_maker(string &WD)
 {
