@@ -28,19 +28,41 @@ analizer_words_in_text::analizer_words_in_text()
         }
 
     }while(true);
-    cout << "\n\n\n\n";
-    make_collection();
-    for (auto it : list_of_words)
-        printWord(it);
+
+    do
+    {
+        cout << "Do you want to sort (by_popularity or alphabetically): ";
+        string answer2;
+        getline(cin, answer2, '\r');
+        if (answer2 == "by_popularity")
+        {
+            cout << "\n\n\n\n";
+            make_collection();
+            make_sort_collection_by_pop();
+            printTextInfo(by_popularity);
+            break;
+        } else if (answer2 == "alphabetically")
+        {
+            cout << "\n\n\n\n";
+            make_collection();
+            printTextInfo(alphabetically);
+        }
+    }while (true);
+    path_output = "C:\\Users\\Ivan\\Documents\\Popular_words_v2_1\\save.txt";
+
 }
 
-analizer_words_in_text::analizer_words_in_text(string input, mod M)
+
+
+
+
+analizer_words_in_text::analizer_words_in_text(string input, mod M, mod2 M2)
 {
     prepare_the_text(input, M);
     make_collection();
-    for (auto it : list_of_words)
-        printWord(it);
-    printTextInfo();
+    printTextInfo(M2);
+    path_output = "C:\\Users\\Ivan\\Documents\\Popular_words_v2_1\\save.txt";
+
 }
 
 bool analizer_words_in_text::is_capital_letter(char s)
@@ -67,6 +89,17 @@ bool analizer_words_in_text::is_word(string wd0)
     return true;
 }
 
+bool analizer_words_in_text::is_roman_numerals(string num)
+{
+    num = small_word_maker(num);
+    for (char s : num)
+      if (!(s == 'i' or
+            s == 'v' or
+            s == 'x' or
+            s == 'l' or
+            s == 'c')) return false;
+    return true;
+}
 
 
 void analizer_words_in_text::prepare_the_text(string path, mod M)
@@ -94,7 +127,7 @@ void analizer_words_in_text::prepare_the_text(string path, mod M)
         }
         fin.close();
        // buffer += " ";
-        cout << buffer << "." << endl;
+       // cout << buffer << "." << endl;
     }
    else
    {
@@ -132,10 +165,11 @@ void analizer_words_in_text::make_collection()
             //cout << temp << endl;
             auto it = list_of_words.find(temp4search);
             if (it == list_of_words.end())              //If the search pointer points to the end of the tree,
-            {if (is_word(temp)) addWord(temp); }                         //add the word to the collection.
+            {if (is_word(temp) and !is_roman_numerals(temp)) addWord(temp); }                         //add the word to the collection.
             else
             {
                 it->second.applying++;
+                if (it->second.isName)
                 it->second.isName = is_capital_letter(temp[0]);
             }
             count_all_words++;
@@ -144,9 +178,22 @@ void analizer_words_in_text::make_collection()
     }
 }
 
+void analizer_words_in_text::make_sort_collection_by_pop()
+{
+    for (auto it : list_of_words)
+    {
+        pair<unsigned, string> pai;
+        pai.first = it.second.applying;
+        string Word = it.first;
+        if (it.second.isName) Word[0] -= 32;
+        pai.second = Word;
+        sort_list.insert(pai);
+    }
+}
+
 void analizer_words_in_text::addWord(string WD)
 {
-    //cout << "addWord(" << WD <<") ";
+
     string wd = small_word_maker(WD);
     info inf;
     inf.applying = 1;
@@ -175,8 +222,34 @@ void analizer_words_in_text::printWord(const pair<string, info> &word)
     cout << endl;
 }
 
-void analizer_words_in_text::printTextInfo()
+void analizer_words_in_text::printPopWord(const pair<unsigned, string> &word)
 {
+    double procent = static_cast<double>(word.first) / count_all_words * 100;
+    cout << setiosflags(ios::right) << setiosflags(ios::fixed) << setiosflags(ios::showpoint)
+         << setprecision(3) << setw(7) << procent << "% ";
+
+
+        cout << setiosflags(ios::orientation) << setw(static_cast<int>(MAX_WIDTH))
+             << word.second << " - " << word.first;
+        cout << endl;
+
+}
+
+void analizer_words_in_text::printTextInfo(mod2 method)
+{
+
+    cout << "Number of words: " << count_all_words << endl;
+    cout << "Number of diferent words: " << list_of_words.size() <<endl;
+    if (method == alphabetically)
+    {
+        for (auto it : list_of_words)
+            printWord(it);
+    } else
+    {
+        make_sort_collection_by_pop();
+        for (auto it : sort_list)
+            printPopWord(it);
+    }
     cout << "Number of words: " << count_all_words << endl;
     cout << "Number of diferent words: " << list_of_words.size() <<endl;
 }
@@ -190,4 +263,48 @@ string analizer_words_in_text::small_word_maker(string &WD)
             wd[i] += 32;
 
     return wd;
+}
+
+analizer_words_in_text::~analizer_words_in_text()
+{
+    do
+    {
+        cout <<"Do you want to save list of word? (yes / no / auto)" << endl;
+        cout << "Answer: ";
+        string answerSave;
+        cin >> answerSave;
+        if (answerSave == "no") break;
+        if (answerSave == "yes" or answerSave == "auto")
+        {
+            if (answerSave == "yes") cout << "Enter path of save: ";
+            fstream fout;
+
+           if (answerSave == "yes") cin >> path_output;
+           fout.open(path_output);
+            if (!fout.is_open())
+            {
+                cout << "Error of open file!" << endl;
+                continue;
+            }
+            for (auto word : sort_list)
+            {
+                double procent = static_cast<double>(word.first) / count_all_words * 100;
+                fout << setiosflags(ios::right) << setiosflags(ios::fixed) << setiosflags(ios::showpoint)
+                     << setprecision(3) << setw(7) << procent << "% ";
+
+
+                    fout << setiosflags(ios::orientation) << setw(static_cast<int>(MAX_WIDTH))
+                         << word.second << " - " << word.first;
+                    fout << endl;
+            }
+            fout.close();
+            cout << "File has been saved by path:" << endl;
+            cout << path_output << endl;
+            break;
+
+        }
+        break;
+    } while (true);
+
+
 }
